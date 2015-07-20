@@ -1,5 +1,7 @@
 #include <gtk/gtk.h>
-#define R 2
+#include "my.h"
+#define R 4
+#define B 360
 /* Surface to store current scribbles */
 static cairo_surface_t *surface = NULL;
 
@@ -72,54 +74,7 @@ draw_brush (GtkWidget *widget,
   gtk_widget_queue_draw_area (widget, x - R, y - R, 2*R, 2*R);
 }
 
-/* Handle button press events by either drawing a rectangle
- * or clearing the surface, depending on which button was pressed.
- * The ::button-press signal handler receives a GdkEventButton
- * struct which contains this information.
- */
-static gboolean
-button_press_event_cb (GtkWidget      *widget,
-                       GdkEventButton *event,
-                       gpointer        data)
-{
-  /* paranoia check, in case we haven't gotten a configure event */
-  if (surface == NULL)
-    return FALSE;
 
-  if (event->button == GDK_BUTTON_PRIMARY)
-    {
-      draw_brush (widget, event->x, event->y);
-    printf("press x:%f,y:%f", event->x, event->y);
-    }
-  else if (event->button == GDK_BUTTON_SECONDARY)
-    {
-      clear_surface ();
-      gtk_widget_queue_draw (widget);
-    }
-
-  /* We've handled the event, stop processing */
-  return TRUE;
-}
-
-/* Handle motion events by continuing to draw if button 1 is
- * still held down. The ::motion-notify signal handler receives
- * a GdkEventMotion struct which contains this information.
- */
-static gboolean
-motion_notify_event_cb (GtkWidget      *widget,
-                        GdkEventMotion *event,
-                        gpointer        data)
-{
-  /* paranoia check, in case we haven't gotten a configure event */
-  if (surface == NULL)
-    return FALSE;
-
-  if (event->state & GDK_BUTTON1_MASK)
-    draw_brush (widget, event->x, event->y);
-  printf("x:%f,y:%f", event->x,event->y);
-  /* We've handled it, stop processing */
-  return TRUE;
-}
 
 static void
 close_window (void)
@@ -151,7 +106,7 @@ activate (GtkApplication *app,
 
   drawing_area = gtk_drawing_area_new ();
   /* set a minimum size */
-  gtk_widget_set_size_request (drawing_area, 300, 300);
+  gtk_widget_set_size_request (drawing_area, B, B);
 
   gtk_container_add (GTK_CONTAINER (frame), drawing_area);
 
@@ -161,11 +116,6 @@ activate (GtkApplication *app,
   g_signal_connect (drawing_area,"configure-event",
                     G_CALLBACK (configure_event_cb), NULL);
 
-  /* Event signals */
-  g_signal_connect (drawing_area, "motion-notify-event",
-                    G_CALLBACK (motion_notify_event_cb), NULL);
-  g_signal_connect (drawing_area, "button-press-event",
-                    G_CALLBACK (button_press_event_cb), NULL);
 
   /* Ask to receive events the drawing area doesn't normally
    * subscribe to. In particular, we need to ask for the
@@ -176,8 +126,9 @@ activate (GtkApplication *app,
                                      | GDK_POINTER_MOTION_MASK);
 
  gtk_widget_show_all (window);
-draw_brush(drawing_area, 63, 84);
-draw_brush(drawing_area, 67,84);
+init_eB();	
+draw_brush(drawing_area, eb0->x, eb0->y);
+draw_brush(drawing_area, eb1->x, eb1->y);
 }
 
 int
