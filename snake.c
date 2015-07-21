@@ -133,7 +133,9 @@ activate (GtkApplication *app,
     eb_n = eb0->next; 
     
     while(eb_n != eb0){
-       draw_brush(drawing_area, eb_n->x, eb_n->y);
+       if(eb_n->type == 1){
+          draw_brush(drawing_area, eb_n->x, eb_n->y);
+        }
        eb_n = eb_n->next;
      }
 }

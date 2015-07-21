@@ -10,6 +10,7 @@ typedef struct eBlock
   struct Eblock *pre;
   double x;
   double y;
+  int type;//显示种类闪烁 黑点 空白
   struct Eblock *next;
 }eB, *peB;
 
@@ -21,10 +22,11 @@ struct eDir{
 int dot_num, width, height;
 peB eb0 ,eb_p,eb_n,eb_tmp;
 
-peB insert_one_eB(peB p,peB n, double x, double y){
+peB insert_one_eB(peB p,peB n, double x, double y, int type){
  peB tmp = (peB)malloc(sizeof(eB));
  tmp->x = x;
  tmp->y = y;
+ tmp->type= type;
  tmp->next = n;
  tmp->pre = p;
  return tmp; 
@@ -34,14 +36,16 @@ int init_eB(void){
 	dot_num = (int)(B*B/(R*2*2*R));//屏幕上点数
     width = height = (int)(B*(2*R));
 	peB all_dot[dot_num];
-    eb0 = (peB)malloc(sizeof(eB));
-    eb0->x = R;
-    eb0->y = R;
+    eb0 = insert_one_eB(NULL,NULL, R, R, 0);
     eb_p = eb0;
     for(int i=0;i<width;i++){
 		for(int j=0;j<height;j++){
     		//printf("i:%d,j:%d", i, j);
-            eb_tmp = insert_one_eB(eb_p,NULL,(2*i+1)*R,(2*j+1)*R);
+		if(i==0 && j==0){
+           printf("i j k");
+			continue;
+		}
+            eb_tmp = insert_one_eB(eb_p,NULL,(2*i+1)*R,(2*j+1)*R,(int)(i%2));
             eb_p->next = eb_tmp;
             eb_p = eb_tmp;
 		}
