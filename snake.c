@@ -1,5 +1,5 @@
 #include <gtk/gtk.h>
-#include "my.h"
+#include "snake.h"
 /* Surface to store current scribbles */
 static cairo_surface_t *surface = NULL;
 
@@ -129,14 +129,13 @@ activate (GtkApplication *app,
 
     gtk_widget_show_all (window);
     init_eB();
-    peB eb2,eb1;
-    eb1 = eb[0];
-    draw_brush(drawing_area, eb1->x, eb1->y);
-    eb1 = eb1->next;
-   while(eb[0] != eb1){
-      draw_brush(drawing_area, eb1->x, eb1->y);
-      eb1 = eb1->next;
-    }
+    draw_brush(drawing_area, eb0->x, eb0->y);
+    eb_n = eb0->next; 
+    
+    while(eb_n != eb0){
+       draw_brush(drawing_area, eb_n->x, eb_n->y);
+       eb_n = eb_n->next;
+     }
 }
 
 int
