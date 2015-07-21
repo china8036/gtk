@@ -2,7 +2,7 @@
 #include<stdlib.h>
 #include "sys/malloc.h"
 #define R 4
-#define B 360
+#define B 400
 
 //链表用于存储蛇的每个元素
 typedef struct eBlock
@@ -34,22 +34,25 @@ peB insert_one_eB(peB p,peB n, double x, double y, int type){
 
 int init_eB(void){
 	dot_num = (int)(B*B/(R*2*2*R));//屏幕上点数
-    width = height = (int)(B*(2*R));
-	peB all_dot[dot_num];
+    width = height = (int)(B/(2*R));
+	printf("w:%d,h:%d\n", width, height);
+    peB all_dot[dot_num];
     eb0 = insert_one_eB(NULL,NULL, R, R, 0);
     eb_p = eb0;
     for(int i=0;i<width;i++){
 		for(int j=0;j<height;j++){
-    		//printf("i:%d,j:%d", i, j);
-		if(i==0 && j==0){
-           printf("i j k");
-			continue;
-		}
-            eb_tmp = insert_one_eB(eb_p,NULL,(2*i+1)*R,(2*j+1)*R,(int)(i%2));
-            eb_p->next = eb_tmp;
-            eb_p = eb_tmp;
+           //printf("i:%d,j:%d\n", i, j);
+			if(i!=0 || j!=0){
+             eb_tmp = insert_one_eB(eb_p,NULL,(2*i+1)*R,(2*j+1)*R,0);
+             if(((2*(i-1)) <= width) && ((2*(i+1))>= width) && ((2*j) ==height)){
+                  eb_tmp->type = 1;
+              }
+             eb_p->next = eb_tmp;
+             eb_p = eb_tmp;
+            }
 		}
     }
     eb_p->next = eb0; 
     return 0;
 }
+
